@@ -6,7 +6,7 @@
 
 ### Description
 
-Simple tool to brutefore HTTP authentication forms.
+Simple tool to bruteforce HTTP authentication forms.
 
 Currently supports:
 * Basic HTTP authentication
