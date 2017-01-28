@@ -47,7 +47,8 @@ Authentication attempts: 80
 Authentication attempts: 84
 
 Authentication tests finished.
-Date: 21:25:23 28/01/2017```
+Date: 21:25:23 28/01/2017
+```
 
 ### Requirements
 Python libs required:
