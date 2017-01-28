@@ -1,5 +1,7 @@
 # HTTP Authentication Bruteforcer
 
+### Warning
+
 /!\ Not fully functional yet /!\
 
 /!\ Not tested /!\
