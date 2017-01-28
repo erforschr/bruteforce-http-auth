@@ -51,13 +51,11 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description='HTTP Auth Bruteforcer')
     parser.add_argument('url', metavar='url', type=check_arg_url, help='URL protected by authentication')
-    parser.add_argument('-a', '--authtype', type=check_arg_auth_type, required=True, help='Auth Type: Basic or Digest (b/d)')
+    parser.add_argument('-a', '--authtype', type=check_arg_auth_type, required=True, help='Auth Type ("basic" or "digest")')
     parser.add_argument('-b', '--buffersize', type=check_arg_buffer_size, default=5, help='Buffer size (1 < buffer size < 10)')
-    userpass_group = parser.add_mutually_exclusive_group()
-    userpass_group.add_argument('-c', '--credentialsfile', type=argparse.FileType('r'), help='File containing the usernames and passwords (one "username:password" per line)')
-    userpass_files_group = userpass_group.add_argument_group()
-    userpass_files_group.add_argument('-u', '--usernamesfile', type=argparse.FileType('r'), help='File containing the usernames (one "username" per line)')
-    userpass_files_group.add_argument('-p', '--passwordsfile', type=argparse.FileType('r'), help='File containing the passwords (one "password" per line)')
+    parser.add_argument('-c', '--credentialsfile', type=argparse.FileType('r'), help='File containing the usernames and passwords (one "username:password" per line)')
+    parser.add_argument('-u', '--usernamesfile', type=argparse.FileType('r'), help='File containing the usernames (one "username" per line)')
+    parser.add_argument('-p', '--passwordsfile', type=argparse.FileType('r'), help='File containing the passwords (one "password" per line)')
     args = parser.parse_args()
 
     return args
@@ -256,11 +254,20 @@ def main():
     if not url_requires_auth:
         sys.exit(0)
 
+    log.info('')
+
     creds_generator = None
     if args.credentialsfile:
         creds_generator = credentials_generator_from_credentials_file(args.credentialsfile, args.buffersize)
-    else:
+        log.info('Credentials file: ' + args.credentialsfile.name)
+    elif args.usernamesfile and args.passwordsfile:
         creds_generator = credentials_generator_from_username_and_password_files(args.usernamesfile, args.passwordsfile, args.buffersize)
+        log.info('Usernames file: ' + args.usernamesfile.name)
+        log.info('Passwords file: ' + args.passwordsfile.name)
+
+    else:
+        log.error('No input credentials file specified.')
+        sys.exit(0)
 
     log.info('')
     log.info('Authentication tests begin...')
