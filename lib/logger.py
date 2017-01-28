@@ -20,9 +20,10 @@ class logger:
         file_basename = 'bruteforce_'
         date = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
-        log_file_name = os.path.join(project_path, 'logs', file_basename + date + '.log')
+        if not os.path.isdir(os.path.join(project_path, 'logs')):
+            os.makedirs(os.path.join(project_path, 'logs'))
 
-        print(log_file_name)
+        log_file_name = os.path.join(project_path, 'logs', file_basename + date + '.log')
 
         self.file = open(log_file_name, 'w')
 
