@@ -1,6 +1,6 @@
 # HTTP Authentication Bruteforcer
 
-/!\ Not fully functionnal yet /!\
+/!\ Not fully functional yet /!\
 
 /!\ Not tested /!\
 
