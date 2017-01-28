@@ -4,6 +4,7 @@
 
 /!\ Not tested /!\
 
+
 ### Description
 
 Simple tool to bruteforce HTTP authentication forms.
@@ -12,14 +13,15 @@ Currently supports:
 * Basic HTTP authentication
 * Digest HTTP authentication
 
+
 ### Usage
 
-Usage:
+Usage example:
 ```sh
 python3 httpauthbruteforcer.py -u ./usernames.txt -p ./passwords.txt -a basic https://www.my-protected-resource.com/
 ```
 
-Output:
+Output example:
 ```sh
 -------------------------
 ~ HTTP Auth Bruteforcer ~
@@ -52,6 +54,26 @@ Authentication attempts: 84
 Authentication tests finished.
 Date: 21:52:29 28/01/2017
 ```
+
+Arguments:
+```sh
+positional arguments:
+  url                   URL protected by authentication
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a AUTHTYPE, --authtype AUTHTYPE
+                        Authentication type ("basic" or "digest")
+  -b BUFFERSIZE, --buffersize BUFFERSIZE
+                        Buffer size (0 < buffer size <= 10)
+  -c CREDENTIALSFILE, --credentialsfile CREDENTIALSFILE
+                        File containing the usernames and passwords (one "username:password" per line)
+  -u USERNAMESFILE, --usernamesfile USERNAMESFILE
+                        File containing the usernames (one "username" per line)
+  -p PASSWORDSFILE, --passwordsfile PASSWORDSFILE
+                        File containing the passwords (one "password" per line)
+```
+
 
 ### Requirements
 Python libs required:
