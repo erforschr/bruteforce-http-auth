@@ -1,5 +1,5 @@
 # http-auth-bruteforcer
 HTTP Authentication Bruteforcer
-<aside class="notice">
+<aside class="warning">
 Test.
 </aside>
