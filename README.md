@@ -14,6 +14,7 @@ Simple tool to bruteforce HTTP authentication forms.
 Currently supports:
 * Basic HTTP authentication
 * Digest HTTP authentication
+* NTLM authentication
 
 
 ### Usage
@@ -24,6 +25,7 @@ python3 httpauthbruteforcer.py -u ./usernames.txt -p ./passwords.txt -a basic ht
 ```
 
 Output example:
+
 ```sh
 -------------------------
 ~ HTTP Auth Bruteforcer ~
@@ -76,9 +78,16 @@ optional arguments:
                         File containing the passwords (one "password" per line)
 ```
 
+Usernames format for NTLM authentication: `domain\username`
 
 ### Requirements
 Python libs required:
-* requests
-* grequests
-* validators
+* [requests](https://github.com/kennethreitz/requests)
+* [requests_ntlm](https://github.com/requests/requests-ntlm)
+* [grequests](https://github.com/kennethreitz/grequests)
+* [validators](https://github.com/kvesteri/validators)
+
+Install:
+```sh
+python3 -m pip install requests requests_ntlm grequests validators
+```

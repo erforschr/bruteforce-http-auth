@@ -3,6 +3,7 @@ import sys
 import base64
 import argparse
 import requests
+import requests_ntlm
 import grequests
 import validators
 import itertools
@@ -36,7 +37,7 @@ def parse_args():
         return value
 
     def check_arg_auth_type(value):
-        if value not in ['basic', 'digest']:
+        if value not in ['basic', 'digest', 'ntlm']:
             raise Exception('Authentication type not valid')
         return value
 
@@ -51,7 +52,7 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description='HTTP Auth Bruteforcer')
     parser.add_argument('url', metavar='url', type=check_arg_url, help='URL protected by authentication')
-    parser.add_argument('-a', '--authtype', type=check_arg_auth_type, required=True, help='Authentication type ("basic" or "digest")')
+    parser.add_argument('-a', '--authtype', type=check_arg_auth_type, required=True, help='Authentication type ("basic", "digest" or "ntlm")')
     parser.add_argument('-b', '--buffersize', type=check_arg_buffer_size, default=5, help='Buffer size (0 < buffer size <= 10)')
     parser.add_argument('-c', '--credentialsfile', type=argparse.FileType('r'), help='File containing the usernames and passwords (one "username:password" per line)')
     parser.add_argument('-u', '--usernamesfile', type=argparse.FileType('r'), help='File containing the usernames (one "username" per line)')
@@ -243,9 +244,34 @@ def test_digest_auth(url, credentials_buffer):
     return auth_successes
 
 
+def test_ntlm_auth(url, credentials_buffer):
+    auth_successes = []
+
+    timeout = 5
+    verify = False
+
+    requests_buffer = []
+
+    for credentials in credentials_buffer:
+        auth = requests_ntlm.HttpNtlmAuth(credentials.username, credentials.password)
+        requests_buffer.append(grequests.get(url=url, auth=auth, verify=verify, timeout=timeout))
+
+    resps = grequests.map(requests_buffer)
+
+    for resp in resps:
+        if resp.status_code == 200:
+            credentials = HTTPAuthUtils.get_credentials_from_digest_requests(resp, requests_buffer)
+
+            auth_successes.append(credentials)
+
+    return auth_successes
+
+
 def main():
+    # Parse arguments
     args = parse_args()
 
+    # Print banner and check URL
     print_banner()
     print_server_informations(args.url)
 
@@ -256,6 +282,7 @@ def main():
 
     log.info('')
 
+    # Set credential generator
     creds_generator = None
     if args.credentialsfile:
         creds_generator = credentials_generator_from_credentials_file(args.credentialsfile, args.buffersize)
@@ -269,6 +296,7 @@ def main():
         log.error('No input credentials file specified.')
         sys.exit(0)
 
+    # Test credentials on URL
     log.info('')
     log.info('Authentication tests begin...')
     log.info('Date: ' + datetime.datetime.now().strftime('%H:%M:%S %d/%m/%Y'))
@@ -282,12 +310,14 @@ def main():
             auth_successes = test_basic_auth(args.url, credentials_buffer)
         elif args.authtype == 'digest':
             auth_successes = test_digest_auth(args.url, credentials_buffer)
+        elif args.authtype == 'ntlm':
+            auth_successes = test_ntlm_auth(args.url, credentials_buffer)
         else:
             raise Exception('Auth type ' + args.authtype + ' not known')
 
         if len(auth_successes) != 0:
             for credentials in auth_successes:
-                log.success('Authentication success. Username: ' + credentials.username + ', password: ' + credentials.password)
+                log.success('Authentication success: username: ' + credentials.username + ', password: ' + credentials.password)
 
         count += len(credentials_buffer)
         log.info('Authentication attempts: ' + str(count))
