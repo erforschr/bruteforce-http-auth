@@ -82,7 +82,7 @@ optional arguments:
 
 Usernames format for NTLM authentication: `domain\username`
 
-/!\ Be aware that a NTLM authentication bruteforce could lock the account. /!\
+/!\ Be aware that a NTLM authentication bruteforce could lock an account. /!\
 
 ### Requirements
 Python libs required:
