@@ -67,7 +67,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -a AUTHTYPE, --authtype AUTHTYPE
-                        Authentication type ("basic" or "digest")
+                        Authentication type ("basic", "digest" or "ntlm")
   -b BUFFERSIZE, --buffersize BUFFERSIZE
                         Buffer size (0 < buffer size <= 10)
   -c CREDENTIALSFILE, --credentialsfile CREDENTIALSFILE
