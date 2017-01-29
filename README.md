@@ -78,7 +78,7 @@ optional arguments:
                         File containing the passwords (one "password" per line)
 ```
 
-##### Additional information on NTLM authentication
+##### NTLM authentication
 
 Usernames format for NTLM authentication: `domain\username`
 
