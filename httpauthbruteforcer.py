@@ -1,6 +1,5 @@
 import re
 import sys
-import base64
 import argparse
 import requests
 import requests_ntlm
@@ -70,7 +69,11 @@ def print_server_informations(url):
         log.info('Server: ' + resp.headers['Server'])
         log.info('Date: ' + resp.headers['Date'])
         try:
-            log.info('Authentication type: ' + resp.headers['WWW-Authenticate'].split(' ')[0])
+            auth_type = resp.headers['WWW-Authenticate']
+            if 'ntlm' in auth_type.lower():
+                log.info('Authentication type: ' + resp.headers['WWW-Authenticate'])
+            else:
+                log.info('Authentication type: ' + resp.headers['WWW-Authenticate'].split(' ')[0])
         except:
             pass
         try:
@@ -119,39 +122,50 @@ class Credentials:
 
 class HTTPAuthUtils:
     @staticmethod
-    def get_credentials_from_basic_requests(resp):
-        resp_req_header = vars(vars(resp)['request'])['headers']
-        resp_req_www_auth = resp_req_header['Authorization']
-        resp_req_www_basic  = resp_req_www_auth.split(' ')[1]
-        resp_req_www_basic_decoded = base64.standard_b64decode(resp_req_www_basic).decode('utf-8')
+    def get_credentials_from_basic_requests(reqs_list):
+        credentials_list = []
 
-        username = resp_req_www_basic_decoded.split(':')[0]
-        password = resp_req_www_basic_decoded.split(':')[1]
+        for req in reqs_list:
+            req_resp_status_code = vars(vars(req)['response'])['status_code']
 
-        credentials = Credentials(username, password)
-
-        return credentials
-
-    @staticmethod
-    def get_credentials_from_digest_requests(resp, reqs):
-        credentials = None
-
-        resp_req_header = vars(vars(resp)['request'])['headers']
-        resp_req_www_auth = resp_req_header['Authorization']
-        resp_req_nonce = re.search(r'nonce="(.*?)"', resp_req_www_auth).group(1)
-
-        for req in reqs:
-            req_header = vars(vars(vars(req)['response'])['request'])['headers']
-            req_www_auth = req_header['Authorization']
-            req_nonce = re.search(r'nonce="(.*?)"', req_www_auth).group(1)
-
-            if resp_req_nonce == req_nonce:
+            if req_resp_status_code == 200:
                 req_username = vars(vars(req)['kwargs']['auth'])['username']
                 req_password = vars(vars(req)['kwargs']['auth'])['password']
 
-                credentials = Credentials(req_username, req_password)
+                credentials_list.append(Credentials(req_username, req_password))
 
-        return credentials
+        return credentials_list
+
+    @staticmethod
+    def get_credentials_from_digest_requests(reqs_list):
+        credentials_list = []
+
+        for req in reqs_list:
+            req_resp_status_code = vars(vars(req)['response'])['status_code']
+
+            if req_resp_status_code == 200:
+                req_username = vars(vars(req)['kwargs']['auth'])['username']
+                req_password = vars(vars(req)['kwargs']['auth'])['password']
+
+                credentials_list.append(Credentials(req_username, req_password))
+
+        return credentials_list
+
+    @staticmethod
+    def get_credentials_from_ntlm_requests(reqs_list):
+        credentials_list = []
+
+        for req in reqs_list:
+            req_resp_status_code = vars(vars(req)['response'])['status_code']
+
+            if req_resp_status_code == 200:
+                req_domain = vars(vars(req)['kwargs']['auth'])['domain']
+                req_username = vars(vars(req)['kwargs']['auth'])['username']
+                req_password = vars(vars(req)['kwargs']['auth'])['password']
+
+                credentials_list.append(Credentials(req_domain + '\\' + req_username, req_password))
+
+        return credentials_list
 
 
 def credentials_generator_from_credentials_file(credentials_file_object, buffer_size):
@@ -212,11 +226,10 @@ def test_basic_auth(url, credentials_buffer):
 
     resps = grequests.map(requests_buffer)
 
-    for resp in resps:
-        if resp.status_code == 200:
-            credentials = HTTPAuthUtils.get_credentials_from_basic_requests(resp)
+    if 200 in [resp.status_code for resp in resps]:
+        credentials = HTTPAuthUtils.get_credentials_from_basic_requests(requests_buffer)
 
-            auth_successes.append(credentials)
+        auth_successes.extend(credentials)
 
     return auth_successes
 
@@ -235,11 +248,10 @@ def test_digest_auth(url, credentials_buffer):
 
     resps = grequests.map(requests_buffer)
 
-    for resp in resps:
-        if resp.status_code == 200:
-            credentials = HTTPAuthUtils.get_credentials_from_digest_requests(resp, requests_buffer)
+    if 200 in [resp.status_code for resp in resps]:
+        credentials = HTTPAuthUtils.get_credentials_from_digest_requests(requests_buffer)
 
-            auth_successes.append(credentials)
+        auth_successes.extend(credentials)
 
     return auth_successes
 
@@ -247,7 +259,7 @@ def test_digest_auth(url, credentials_buffer):
 def test_ntlm_auth(url, credentials_buffer):
     auth_successes = []
 
-    timeout = 5
+    timeout = 15
     verify = False
 
     requests_buffer = []
@@ -258,11 +270,10 @@ def test_ntlm_auth(url, credentials_buffer):
 
     resps = grequests.map(requests_buffer)
 
-    for resp in resps:
-        if resp.status_code == 200:
-            credentials = HTTPAuthUtils.get_credentials_from_digest_requests(resp, requests_buffer)
+    if 200 in [resp.status_code for resp in resps]:
+        credentials_list = HTTPAuthUtils.get_credentials_from_ntlm_requests(requests_buffer)
 
-            auth_successes.append(credentials)
+        auth_successes.extend(credentials_list)
 
     return auth_successes
 

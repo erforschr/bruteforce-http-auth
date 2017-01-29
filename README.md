@@ -4,7 +4,7 @@
 
 /!\ Not fully functional yet /!\
 
-/!\ Not tested /!\
+/!\ Not adequately tested /!\
 
 
 ### Description
@@ -50,7 +50,7 @@ Authentication attempts: 30
 Authentication attempts: 40
 Authentication attempts: 50
 Authentication attempts: 60
-Authentication success. Username: user, password: pass
+Authentication success: username: user, password: pass
 Authentication attempts: 70
 Authentication attempts: 80
 Authentication attempts: 84
@@ -78,7 +78,11 @@ optional arguments:
                         File containing the passwords (one "password" per line)
 ```
 
+##### Additional information on NTLM authentication
+
 Usernames format for NTLM authentication: `domain\username`
+
+/!\ Be aware that a NTLM authentication bruteforce could lock the account. /!\
 
 ### Requirements
 Python libs required:
