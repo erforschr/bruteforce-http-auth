@@ -315,7 +315,7 @@ def main():
 
     count = 0
     print_count = 0
-    
+
     for credentials_buffer in creds_generator:
         auth_successes = []
 
@@ -339,7 +339,7 @@ def main():
         else:
             print_count += 1
 
-            if print_count => 5:
+            if print_count >= 10:
                 log.info('Authentication attempts: ' + str(count))
                 print_count = 0
 
