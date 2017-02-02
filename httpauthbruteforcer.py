@@ -331,7 +331,12 @@ def main():
                 log.success('Authentication success: username: ' + credentials.username + ', password: ' + credentials.password)
 
         count += len(credentials_buffer)
-        log.info('Authentication attempts: ' + str(count))
+
+        if count <= 5*args.buffersize:
+            log.info('Authentication attempts: ' + str(count))
+        else:
+            if count % (5*args.buffersize):
+                log.info('Authentication attempts: ' + str(count))
 
         time.sleep(0.5)
 
