@@ -11,7 +11,7 @@ import itertools
 import datetime
 import time
 
-from lib import logger
+from libs import logger
 
 
 # Disable InsecureRequestWarning for unverified HTTPS request
