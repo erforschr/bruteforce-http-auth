@@ -52,7 +52,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='HTTP Auth Bruteforcer')
     parser.add_argument('url', metavar='url', type=check_arg_url, help='URL protected by authentication')
     parser.add_argument('-a', '--authtype', type=check_arg_auth_type, required=True, help='Authentication type ("basic", "digest" or "ntlm")')
-    parser.add_argument('-b', '--buffersize', type=check_arg_buffer_size, default=5, help='Buffer size (0 < buffer size <= 10)')
+    parser.add_argument('-b', '--buffersize', type=check_arg_buffer_size, default=10, help='Requests buffer size (0 < buffer size <= 10)')
     parser.add_argument('-c', '--credentialsfile', type=argparse.FileType('r'), help='File containing the usernames and passwords (one "username:password" per line)')
     parser.add_argument('-u', '--usernamesfile', type=argparse.FileType('r'), help='File containing the usernames (one "username" per line)')
     parser.add_argument('-p', '--passwordsfile', type=argparse.FileType('r'), help='File containing the passwords (one "password" per line)')
