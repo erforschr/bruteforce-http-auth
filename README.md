@@ -82,6 +82,7 @@ Usernames format for NTLM authentication: `domain\username`
 
 /!\ Be aware that a NTLM authentication bruteforce could lock an account. /!\
 
+
 ### Requirements
 Python libs required:
 * [requests](https://github.com/kennethreitz/requests)
@@ -93,3 +94,17 @@ Install:
 ```sh
 python3 -m pip install requests requests_ntlm grequests validators
 ```
+
+
+### Dictionaries
+
+| List                                            | Source               | Link                                                                                                    |
+|-------------------------------------------------|----------------------|---------------------------------------------------------------------------------------------------------|
+| unix_users.txt                                  | Metasploit wordlists | https://github.com/rapid7/metasploit-framework/blob/master/data/wordlists/unix_users.txt                |
+| unix_passwords.txt                              | Metasploit wordlists | https://github.com/rapid7/metasploit-framework/blob/master/data/wordlists/unix_passwords.txt            |
+| seclists_usernames_top_shortlist.txt            | SecLists             | https://github.com/danielmiessler/SecLists/blob/master/Usernames/top_shortlist.txt                      |
+| seclists_passwords_top_shortlist.txt            | SecLists             | https://github.com/danielmiessler/SecLists/blob/master/Passwords/top_shortlist.txt                      |
+| seclists_10_million_password_list_top_100.txt   | SecLists             | https://github.com/danielmiessler/SecLists/blob/master/Passwords/10_million_password_list_top_100.txt   |
+| seclists_10_million_password_list_top_500.txt   | SecLists             | https://github.com/danielmiessler/SecLists/blob/master/Passwords/10_million_password_list_top_500.txt   |
+| seclists_10_million_password_list_top_1000.txt  | SecLists             | https://github.com/danielmiessler/SecLists/blob/master/Passwords/10_million_password_list_top_1000.txt  |
+| seclists_10_million_password_list_top_10000.txt | SecLists             | https://github.com/danielmiessler/SecLists/blob/master/Passwords/10_million_password_list_top_10000.txt |
