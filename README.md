@@ -2,8 +2,6 @@
 
 ### Warning
 
-/!\ Not fully functional yet /!\
-
 /!\ Not adequately tested /!\
 
 

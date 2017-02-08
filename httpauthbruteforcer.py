@@ -334,14 +334,7 @@ def main():
 
         count += len(credentials_buffer)
 
-        if count <= 3*args.buffersize:
-            log.info('Authentication attempts: ' + str(count))
-        else:
-            print_count += 1
-
-            if print_count >= 10:
-                log.info('Authentication attempts: ' + str(count))
-                print_count = 0
+        log.info('Authentication attempts: ' + str(count), update=True)
 
         time.sleep(0.5)
 

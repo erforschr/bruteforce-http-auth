@@ -30,18 +30,30 @@ class logger:
     def __exit__(self, type, value, traceback):
         self.file.close()
 
-    def success(self, msg):
+    def success(self, msg, update=False):
         self.file.write(msg + '\n')
-        print(GREEN + msg + RESET)
+        if update:
+            print(GREEN + msg + RESET, end='\r')
+        else:
+            print(GREEN + msg + RESET)
 
-    def info(self, msg):
+    def info(self, msg, update=False):
         self.file.write(msg + '\n')
-        print(WHITE + msg + RESET)
+        if update:
+            print(WHITE + msg + RESET, end='\r')
+        else:
+            print(WHITE + msg + RESET)
 
-    def warn(self, msg):
+    def warn(self, msg, update=False):
         self.file.write(msg + '\n')
-        print(YELLOW + msg + RESET)
+        if update:
+            print(YELLOW + msg + RESET, end='\r')
+        else:
+            print(YELLOW + msg + RESET)
 
-    def error(self, msg):
+    def error(self, msg, update=False):
         self.file.write(msg + '\n')
-        print(RED + msg + RESET)
+        if update:
+            print(RED + msg + RESET, end='\r')
+        else:
+            print(RED + msg + RESET)
