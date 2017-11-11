@@ -1,0 +1,12 @@
+
+admin
+cloudera
+jboss
+manager
+mcUser
+moves
+nagios
+nagiosadmin
+role1
+root
+tomcat
