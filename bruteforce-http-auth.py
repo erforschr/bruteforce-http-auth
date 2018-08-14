@@ -238,7 +238,7 @@ class HTTP_Auth():
 			auth = requests.auth.HTTPDigestAuth(username, password)
 			resp = requests.get(url=url, auth=auth, verify=False, timeout=timeout)
 					
-		elif target['authentication type'] == 'ntml':
+		elif target['authentication type'] == 'ntlm':
 			auth = requests_ntlm.HttpNtlmAuth(username, password)
 			resp = requests.get(url=url, auth=auth, verify=False, timeout=timeout)
 
