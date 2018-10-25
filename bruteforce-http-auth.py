@@ -185,8 +185,8 @@ class HTTP_Auth():
 			resp = requests.get(target['url'], verify=False, timeout=5)
 			
 			target['status code'] = resp.status_code
-			target['server'] = resp.headers['Server']
 			try:
+				target['server'] = resp.headers['Server']
 				target['date'] = resp.headers['Date']
 			except Exception as e:
 				pass
